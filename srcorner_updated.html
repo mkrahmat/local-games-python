@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainBreak: A Smart Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: calc(100vh - 120px);
+        }
+
+        .game-card {
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+            z-index: 1;
+        }
+
+        .game-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .task-manager {
+            grid-row: span 2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .breakout {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .hangman {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        .search-song {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+
+        .typing-game {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.5;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .task-manager .game-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .task-manager .game-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 5px 5px 0 0;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                padding: 20px;
+            }
+            
+            .task-manager {
+                grid-row: span 1;
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">BrainBreak</div>
+        <div class="user-profile">
+            <div class="profile-pic" id="profilePic">U</div>
+            <span id="userName">User</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="game-card task-manager" onclick="openGame('task-manager')">
+            <div class="game-content">
+                <h2 class="game-title">Task Manager</h2>
+                <p class="game-description">Organize your daily tasks and boost productivity with our intuitive task management system. Create, edit, and track your progress effortlessly.</p>
+                <div class="features">
+                    <span class="feature-tag">Productivity</span>
+                    <span class="feature-tag">Organization</span>
+                    <span class="feature-tag">Daily Use</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card breakout" onclick="openGame('breakout')">
+            <div class="game-content">
+                <h2 class="game-title">Breakout</h2>
+                <p class="game-description">Classic brick-breaking arcade game. Use your paddle to bounce the ball and destroy all the bricks!</p>
+                <div class="features">
+                    <span class="feature-tag">Arcade</span>
+                    <span class="feature-tag">Classic</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card hangman" onclick="openGame('hangman')">
+            <div class="game-content">
+                <h2 class="game-title">Hangman</h2>
+                <p class="game-description">Guess the word letter by letter before the drawing is completed. Test your vocabulary!</p>
+                <div class="features">
+                    <span class="feature-tag">Word Game</span>
+                    <span class="feature-tag">Educational</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card search-song" onclick="openGame('search-song')">
+            <div class="game-content">
+                <h2 class="game-title">Search Song</h2>
+                <p class="game-description">Find and discover your favorite songs with our powerful music search engine.</p>
+                <div class="features">
+                    <span class="feature-tag">Music</span>
+                    <span class="feature-tag">Discovery</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-card typing-game" onclick="openGame('typing-game')">
+            <div class="game-content">
+                <h2 class="game-title">Typing Game</h2>
+                <p class="game-description">Improve your typing speed and accuracy with fun challenges and real-time feedback.</p>
+                <div class="features">
+                    <span class="feature-tag">Skill Building</span>
+                    <span class="feature-tag">Practice</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize user profile from URL parameters or localStorage
+        function initializeUser() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userEmail = urlParams.get('email') || 'user@example.com';
+            const userName = urlParams.get('name') || userEmail.split('@')[0];
+            
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('profilePic').textContent = userName.charAt(0).toUpperCase();
+        }
+
+        // Open game function
+        function openGame(gameType) {
+            // Get current user info from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const userName = urlParams.get('name') || 'User';
+            const userEmail = urlParams.get('email') || 'user@example.com';
+            
+            // Create user parameters for the game pages
+            const userParams = new URLSearchParams({
+                name: userName,
+                email: userEmail
+            });
+            
+            switch(gameType) {
+                case 'task-manager':
+                    window.location.href = `animated_task_manager.html?${userParams.toString()}`;
+                    break;
+                case 'breakout':
+                    window.location.href = `dark_breakout_game.html?${userParams.toString()}`;
+                    break;
+                case 'hangman':
+                    window.location.href = `complete_hangman_game.html?${userParams.toString()}`;
+                    break;
+                case 'search-song':
+                    window.location.href = `lyrics_search_app.html?${userParams.toString()}`;
+                    break;
+                case 'typing-game':
+                    window.location.href = `typing_practice_app.html?${userParams.toString()}`;
+                    break;
+                default:
+                    alert('Game not found!');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            const confirmed = confirm('Are you sure you want to logout?');
+            if (confirmed) {
+                // Clear any stored user data and redirect to auth page
+                window.location.href = 'auth-pages.html';
+            }
+        }
+
+        // Profile picture click functionality for logout
+        document.getElementById('profilePic').addEventListener('click', function() {
+            const userName = document.getElementById('userName').textContent;
+            logout();
+        });
+
+        // Initialize the page
+        initializeUser();
+
+        // Add some hover effects with JavaScript
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
